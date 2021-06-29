@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegisterWindow extends StatelessWidget {
-  var borderColor = Color(0xff805306);
+  final borderColor = Color(0xff805306);
   // final ValueChanged navigateTo;
 
   // RegisterWindow({Key key, this.navigateTo});
@@ -157,6 +158,14 @@ class Menu extends StatelessWidget {
 
 class Body extends StatelessWidget {
   // final ValueChanged navigateTo;
+  TextEditingController firstNameController = new TextEditingController();
+  TextEditingController lastNameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController repeatPasswordController = new TextEditingController();
+  TextEditingController organizationController = new TextEditingController();
+
+
 
   // Body({Key key, this.navigateTo});
   @override
@@ -203,19 +212,32 @@ class Body extends StatelessWidget {
       Padding(
         padding: EdgeInsets.symmetric(
             vertical: MediaQuery.of(context).size.width / 12),
-        child: Container(width: 350, child: _formLogin()),
+        child: Container(width: 350, child: _formLogin(context:context,firstNameController: firstNameController,lastNameController:lastNameController,emailController:emailController, passwordController:passwordController, repeatPasswordController:repeatPasswordController, organizationController:organizationController)),
       ),
     ]);
   }
 
-  Widget _formLogin() {
-    return Column(children: [
+  Widget _formLogin({
+    BuildContext context,
+    TextEditingController firstNameController,
+      TextEditingController lastNameController,
+      TextEditingController emailController,
+      TextEditingController passwordController,
+      TextEditingController repeatPasswordController,
+      TextEditingController organizationController,
+  }) {
+    final _form = GlobalKey<FormState>(); //for storing form state.
+    return Form(
+      key:_form,
+        child:
+        Column(children: [
       Container(
         child: Row(
           mainAxisAlignment:MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child:TextField(
+                  controller:firstNameController,
                 decoration: InputDecoration(
                 hintText: "First Name",
                 fillColor: Colors.blueGrey[50],
@@ -237,6 +259,7 @@ class Body extends StatelessWidget {
             SizedBox(width:10),
             Expanded(
               child:TextField(
+                  controller:lastNameController,
                 decoration: InputDecoration(
                 hintText: "Last Name",
                 fillColor: Colors.blueGrey[50],
@@ -261,7 +284,14 @@ class Body extends StatelessWidget {
       SizedBox(
         height: 30,
       ),
-      TextField(
+      TextFormField(
+          controller:emailController,
+          validator: (text) {
+            if (!(text.contains('@')) && text.isNotEmpty) {
+              return "Enter a valid email address!";
+            }
+            return null;
+          },
           decoration: InputDecoration(
             hintText: "Enter Email",
             fillColor: Colors.blueGrey[50],
@@ -277,12 +307,21 @@ class Body extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.blueGrey[50]),
                 borderRadius: BorderRadius.circular(15)
               ),
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(15)
+            ),
+              focusedErrorBorder:OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(15)
+              ),
           )
         ),
       SizedBox(
         height: 30,
       ),
       TextField(
+          controller:passwordController,
           decoration: InputDecoration(
         hintText: "Password",
         fillColor: Colors.blueGrey[50],
@@ -302,6 +341,27 @@ class Body extends StatelessWidget {
         height: 10
         ),
       TextField(
+        controller: repeatPasswordController,
+          decoration: InputDecoration(
+            hintText: "Repeat Password",
+            fillColor: Colors.blueGrey[50],
+            counterText: "Include capital letters,numbers and special characters",
+            suffixIcon: Icon(Icons.visibility_off_outlined, color: Colors.grey),
+            filled: true,
+            labelStyle: TextStyle(fontSize: 12),
+            contentPadding: EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blueGrey[50]),
+                borderRadius: BorderRadius.circular(15)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blueGrey[50]),
+                borderRadius: BorderRadius.circular(15)),
+          )),
+      SizedBox(
+          height: 10
+      ),
+      TextField(
+        controller: organizationController,
           decoration: InputDecoration(
         hintText: "Organization",
         fillColor: Colors.blueGrey[50],
@@ -334,14 +394,32 @@ class Body extends StatelessWidget {
               height: 50,
               child: Center(child: Text("Create Account")),
             ),
-            onPressed: () => {},
+            onPressed: () {
+              // final snackBar = SnackBar(
+              //   content: Text('Yay! A SnackBar!'),
+              //   action: SnackBarAction(
+              //     label: 'Undo',
+              //     onPressed: () {
+              //       // Some code to undo the change.
+              //     },
+              //   ),
+              // );
+              //
+              // // Find the ScaffoldMessenger in the widget tree
+              // // and use it to show a SnackBar.
+              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              final isValid = _form.currentState.validate();
+              if (!isValid) {
+                return;
+              }
+            },
             style: ElevatedButton.styleFrom(
                 primary: Colors.deepPurple,
                 onPrimary: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)))),
       ),
-    ]);
+    ]));
   }
 
 
