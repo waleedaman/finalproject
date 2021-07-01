@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterWindow extends StatelessWidget {
   final borderColor = Color(0xff805306);
@@ -412,6 +413,7 @@ class Body extends StatelessWidget {
               if (!isValid) {
                 return;
               }
+
             },
             style: ElevatedButton.styleFrom(
                 primary: Colors.deepPurple,
@@ -421,7 +423,11 @@ class Body extends StatelessWidget {
       ),
     ]));
   }
-
+  Future<String> _register(BuildContext ctx) async {
+    final prefs = await SharedPreferences.getInstance();
+    final mode = prefs.getString('mode');
+    return mode;
+  }
 
 }
 
