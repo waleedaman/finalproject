@@ -38,15 +38,15 @@ class Window extends StatelessWidget {
     return Expanded(
         child: Container(
             child: Column(children: [
-      WindowTitleBarBox(
-          child: Row(children: [
-        Expanded(
-          child: MoveWindow(),
-        ),
-        WindowButtons(),
-      ])),
-      LoginScreen()
-    ])));
+              WindowTitleBarBox(
+                  child: Row(children: [
+                    Expanded(
+                      child: MoveWindow(),
+                    ),
+                    WindowButtons(),
+                  ])),
+              RegisterScreen()
+            ])));
   }
 }
 
@@ -61,7 +61,7 @@ class WindowButtons extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
   // final ValueChanged navigateTo;
 
   // LoginScreen({Key key, this.navigateTo});
@@ -128,11 +128,11 @@ class Menu extends StatelessWidget {
         ),
         isActive
             ? Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.circular(30)),
-              )
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+          decoration: BoxDecoration(
+              color: Colors.deepPurple,
+              borderRadius: BorderRadius.circular(30)),
+        )
             : SizedBox()
       ]),
     );
@@ -144,23 +144,30 @@ class Menu extends StatelessWidget {
           Navigator.of(context).pushNamed("/login");
         },
         child: new Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(color: Colors.grey[200], spreadRadius: 10, blurRadius: 12)
-          ]),
-        child: Text(
-          'Login',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
-        ),
-      )
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(color: Colors.grey[200], spreadRadius: 10, blurRadius: 12)
+              ]),
+          child: Text(
+            'Login',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+          ),
+        )
     );
   }
 }
 
-class Body extends StatelessWidget {
+
+class Body extends StatefulWidget{
+  @override
+  _BodyState createState() => _BodyState();
+
+}
+
+class _BodyState extends State<Body> {
   // final ValueChanged navigateTo;
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
@@ -168,7 +175,12 @@ class Body extends StatelessWidget {
   TextEditingController passwordController = new TextEditingController();
   TextEditingController repeatPasswordController = new TextEditingController();
   TextEditingController organizationController = new TextEditingController();
-
+  bool _passwordObscured = true;
+  @override
+  void initState() {
+    super.initState();
+    _passwordObscured = true;
+  }
 
 
   // Body({Key key, this.navigateTo});
@@ -178,7 +190,7 @@ class Body extends StatelessWidget {
       Container(
           width: 350,
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Register for \nDocument Manager',
                 style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold)),
             SizedBox(
@@ -187,7 +199,7 @@ class Body extends StatelessWidget {
             Text(
               'If you already have an account',
               style:
-                  TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+              TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 10,
@@ -200,15 +212,15 @@ class Body extends StatelessWidget {
                 width: 15,
               ),
               InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed("/login");
-                },
-                child: new Container(child:Text(
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/login");
+                  },
+                  child: new Container(child:Text(
                     'Sign In Here',
                     style: TextStyle(
-                    color: Colors.deepPurple, fontWeight: FontWeight.bold),
+                        color: Colors.deepPurple, fontWeight: FontWeight.bold),
                   )
-                )
+                  )
               )
             ]),
             Image.asset('assets/images/startpage_bg.png', width: 320),
@@ -224,28 +236,82 @@ class Body extends StatelessWidget {
   Widget _formLogin({
     BuildContext context,
     TextEditingController firstNameController,
-      TextEditingController lastNameController,
-      TextEditingController emailController,
-      TextEditingController passwordController,
-      TextEditingController repeatPasswordController,
-      TextEditingController organizationController,
+    TextEditingController lastNameController,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController repeatPasswordController,
+    TextEditingController organizationController,
   }) {
     final _form = GlobalKey<FormState>(); //for storing form state.
     return Form(
-      key:_form,
+        key:_form,
         child:
         Column(children: [
-      Container(
-        child: Row(
-          mainAxisAlignment:MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child:TextField(
-                  controller:firstNameController,
-                decoration: InputDecoration(
-                hintText: "First Name",
+          Container(
+            child: Row(
+                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child:TextFormField(
+                        controller:firstNameController,
+                        decoration: InputDecoration(
+                          hintText: "First Name",
+                          fillColor: Colors.blueGrey[50],
+                          suffixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.grey),
+                          filled: true,
+                          labelStyle: TextStyle(fontSize: 12),
+                          contentPadding: EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueGrey[50]),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueGrey[50]),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                        )
+                    ),
+                  ),
+                  SizedBox(width:10),
+                  Expanded(
+                    child:TextFormField(
+                        controller:lastNameController,
+                        decoration: InputDecoration(
+                          hintText: "Last Name",
+                          fillColor: Colors.blueGrey[50],
+                          suffixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.grey),
+                          filled: true,
+                          labelStyle: TextStyle(fontSize: 12),
+                          contentPadding: EdgeInsets.only(left: 30),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueGrey[50]),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueGrey[50]),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                        )
+                    ),
+                  ),
+                ]
+            ),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          TextFormField(
+              controller:emailController,
+              validator: (text) {
+                if (!(text.contains('@')) && text.isNotEmpty) {
+                  return "Enter a valid email address!";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: "Enter Email",
                 fillColor: Colors.blueGrey[50],
-                suffixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.grey),
+                suffixIcon: Icon(FontAwesomeIcons.envelope, color: Colors.grey),
                 filled: true,
                 labelStyle: TextStyle(fontSize: 12),
                 contentPadding: EdgeInsets.only(left: 30),
@@ -257,182 +323,195 @@ class Body extends StatelessWidget {
                     borderSide: BorderSide(color: Colors.blueGrey[50]),
                     borderRadius: BorderRadius.circular(15)
                 ),
-                )
-              ),
-            ),
-            SizedBox(width:10),
-            Expanded(
-              child:TextField(
-                  controller:lastNameController,
-                decoration: InputDecoration(
-                hintText: "Last Name",
-                fillColor: Colors.blueGrey[50],
-                suffixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.grey),
-                filled: true,
-                labelStyle: TextStyle(fontSize: 12),
-                contentPadding: EdgeInsets.only(left: 30),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
                     borderRadius: BorderRadius.circular(15)
                 ),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                focusedErrorBorder:OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
                     borderRadius: BorderRadius.circular(15)
                 ),
-                )
-              ),
-            ),
-          ]
-        ),
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      TextFormField(
-          controller:emailController,
-          validator: (text) {
-            if (!(text.contains('@')) && text.isNotEmpty) {
-              return "Enter a valid email address!";
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            hintText: "Enter Email",
-            fillColor: Colors.blueGrey[50],
-            suffixIcon: Icon(FontAwesomeIcons.envelope, color: Colors.grey),
-            filled: true,
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blueGrey[50]),
-                borderRadius: BorderRadius.circular(15)
-              ),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blueGrey[50]),
-                borderRadius: BorderRadius.circular(15)
-              ),
-            errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.circular(15)
-            ),
-              focusedErrorBorder:OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red),
-                  borderRadius: BorderRadius.circular(15)
-              ),
-          )
-        ),
-      SizedBox(
-        height: 30,
-      ),
-      TextField(
-          controller:passwordController,
-          decoration: InputDecoration(
-        hintText: "Password",
-        fillColor: Colors.blueGrey[50],
-        counterText: "Include capital letters,numbers and special characters",
-        suffixIcon: Icon(Icons.visibility_off_outlined, color: Colors.grey),
-        filled: true,
-        labelStyle: TextStyle(fontSize: 12),
-        contentPadding: EdgeInsets.only(left: 30),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueGrey[50]),
-            borderRadius: BorderRadius.circular(15)),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueGrey[50]),
-            borderRadius: BorderRadius.circular(15)),
-      )),
-      SizedBox(
-        height: 10
-        ),
-      TextField(
-        controller: repeatPasswordController,
-          decoration: InputDecoration(
-            hintText: "Repeat Password",
-            fillColor: Colors.blueGrey[50],
-            counterText: "Include capital letters,numbers and special characters",
-            suffixIcon: Icon(Icons.visibility_off_outlined, color: Colors.grey),
-            filled: true,
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blueGrey[50]),
-                borderRadius: BorderRadius.circular(15)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blueGrey[50]),
-                borderRadius: BorderRadius.circular(15)),
-          )),
-      SizedBox(
-          height: 10
-      ),
-      TextField(
-        controller: organizationController,
-          decoration: InputDecoration(
-        hintText: "Organization",
-        fillColor: Colors.blueGrey[50],
-        suffixIcon: Icon(FontAwesomeIcons.building, color: Colors.grey),
-        filled: true,
-        labelStyle: TextStyle(fontSize: 12),
-        contentPadding: EdgeInsets.only(left: 30),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueGrey[50]),
-            borderRadius: BorderRadius.circular(15)),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueGrey[50]),
-            borderRadius: BorderRadius.circular(15)),
-      )),
-      SizedBox(height: 40),
-      Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.deepPurple[100],
-                spreadRadius: 10,
-                blurRadius: 20,
               )
-            ]),
-        child: ElevatedButton(
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              child: Center(child: Text("Create Account")),
-            ),
-            onPressed: () {
-              // final snackBar = SnackBar(
-              //   content: Text('Yay! A SnackBar!'),
-              //   action: SnackBarAction(
-              //     label: 'Undo',
-              //     onPressed: () {
-              //       // Some code to undo the change.
-              //     },
-              //   ),
-              // );
-              //
-              // // Find the ScaffoldMessenger in the widget tree
-              // // and use it to show a SnackBar.
-              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              final isValid = _form.currentState.validate();
-              if (!isValid) {
-                return;
-              }
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          TextFormField(
+              controller:passwordController,
+              obscureText: _passwordObscured,
+              validator: (text) {
+                if(repeatPasswordController.text != text){
+                  return "Passwords do not match";
+                }
+                if(text.isEmpty){
+                  return "Please enter a password";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: "Enter Password",
+                fillColor: Colors.blueGrey[50],
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    // Based on passwordVisible state choose the icon
+                    _passwordObscured
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () {
+                    // Update the state i.e. toogle the state of passwordVisible variable
+                    setState(() {
+                      _passwordObscured = !_passwordObscured;
+                    });
+                  },),
+                filled: true,
+                labelStyle: TextStyle(fontSize: 12),
+                contentPadding: EdgeInsets.only(left: 30),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                focusedErrorBorder:OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+              )
+          ),
+          SizedBox(
+              height: 30
+          ),
+          TextFormField(
+              controller: repeatPasswordController,
+              obscureText: _passwordObscured,
+              validator: (text) {
+                if(passwordController.text != text){
+                  return "Passwords do not match";
+                }
+                if(text.isEmpty){
+                  return "Please repeat the password";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: "Repeat Password",
+                fillColor: Colors.blueGrey[50],
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    // Based on passwordVisible state choose the icon
+                    _passwordObscured
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () {
+                    // Update the state i.e. toogle the state of passwordVisible variable
+                    setState(() {
+                      _passwordObscured = !_passwordObscured;
+                    });
+                  },),
+                filled: true,
+                labelStyle: TextStyle(fontSize: 12),
+                contentPadding: EdgeInsets.only(left: 30),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                focusedErrorBorder:OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(15)
+                ),
+              )
+          ),
+          SizedBox(
+              height: 30
+          ),
+          TextFormField(
+              controller: organizationController,
+              decoration: InputDecoration(
+                hintText: "Organization",
+                fillColor: Colors.blueGrey[50],
+                suffixIcon: Icon(FontAwesomeIcons.building, color: Colors.grey),
+                filled: true,
+                labelStyle: TextStyle(fontSize: 12),
+                contentPadding: EdgeInsets.only(left: 30),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                    borderRadius: BorderRadius.circular(15)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueGrey[50]),
+                    borderRadius: BorderRadius.circular(15)),
+              )),
+          SizedBox(height: 40),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.deepPurple[100],
+                    spreadRadius: 10,
+                    blurRadius: 20,
+                  )
+                ]),
+            child: ElevatedButton(
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  child: Center(child: Text("Create Account")),
+                ),
+                onPressed: () {
+                  // final snackBar = SnackBar(
+                  //   content: Text('Yay! A SnackBar!'),
+                  //   action: SnackBarAction(
+                  //     label: 'Undo',
+                  //     onPressed: () {
+                  //       // Some code to undo the change.
+                  //     },
+                  //   ),
+                  // );
+                  //
+                  // // Find the ScaffoldMessenger in the widget tree
+                  // // and use it to show a SnackBar.
+                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  final isValid = _form.currentState.validate();
+                  if (!isValid) {
+                    return;
+                  }
 
-            },
-            style: ElevatedButton.styleFrom(
-                primary: Colors.deepPurple,
-                onPrimary: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)))),
-      ),
-    ]));
+                },
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurple,
+                    onPrimary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)))),
+          ),
+        ]));
   }
   Future<String> _register(BuildContext ctx) async {
     final prefs = await SharedPreferences.getInstance();
     final mode = prefs.getString('mode');
     return mode;
   }
-
 }
+
+
 
 
 

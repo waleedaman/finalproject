@@ -10,10 +10,17 @@ import 'package:finalproject/app_state.dart';
 class SplashScreen extends StatelessWidget {
   String _navPath = "";
   var borderColor = Color(0xff805306);
+
   @override
   Widget build(BuildContext context) {
-    _getInitialRoute(context).then((val){
-      _navPath = val;
+    if(_navPath == "")
+      _getInitialRoute(context).then((val) {
+      _navPath = val.path;
+      if(StoreProvider.of<AppState>(context).state.mode != val.mode){
+        StoreProvider.of<AppState>(context).dispatch(
+            UpdateModeAction(val.mode));
+        print("State: "+StoreProvider.of<AppState>(context).state.mode+" Pref: "+val.mode);
+      }
       Navigator.of(context).pushNamed(_navPath);
     });
     return Scaffold(
@@ -31,18 +38,19 @@ class SplashScreen extends StatelessWidget {
 
 
 
-  Future<String> _getInitialRoute(BuildContext ctx) async {
+  Future<returnData> _getInitialRoute(BuildContext ctx) async {
     final prefs = await SharedPreferences.getInstance();
     final initialRun = prefs.getInt('initialRun') ?? 0;
     final mode = prefs.getString("mode");
-    StoreProvider.of<AppState>(ctx).dispatch(UpdateModeAction(mode));
     if (initialRun == 0) {
       Future.delayed(const Duration(milliseconds: 1000), () => showAlert(ctx));
-      return "/register";
+      return returnData(mode,"/register");
     } else {
-      return "/login";
+      return returnData(mode,"/login");
     }
   }
+
+
 
   showAlert(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
@@ -143,4 +151,9 @@ class WindowButtons extends StatelessWidget {
       CloseWindowButton()
     ]);
   }
+}
+class returnData {
+  String mode;
+  String path;
+  returnData(this.mode,this.path);
 }
