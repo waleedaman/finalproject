@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+
+import 'package:finalproject/actions.dart';
+import 'package:finalproject/app_state.dart';
 
 class SplashScreen extends StatelessWidget {
   String _navPath = "";
@@ -30,6 +34,8 @@ class SplashScreen extends StatelessWidget {
   Future<String> _getInitialRoute(BuildContext ctx) async {
     final prefs = await SharedPreferences.getInstance();
     final initialRun = prefs.getInt('initialRun') ?? 0;
+    final mode = prefs.getString("mode");
+    StoreProvider.of<AppState>(ctx).dispatch(UpdateModeAction(mode));
     if (initialRun == 0) {
       Future.delayed(const Duration(milliseconds: 1000), () => showAlert(ctx));
       return "/register";
@@ -52,6 +58,7 @@ class SplashScreen extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.pop(context);
+            StoreProvider.of<AppState>(context).dispatch(UpdateModeAction("online"));
             if(_navPath != ""){
               prefs.setInt('initialRun', 1);
               prefs.setString('mode', "online");
@@ -80,6 +87,7 @@ class SplashScreen extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.pop(context);
+            StoreProvider.of<AppState>(context).dispatch(UpdateModeAction("offline"));
             if(_navPath != ""){
               prefs.setInt('initialRun', 1);
               prefs.setString('mode', "offline");

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'app_state.dart';
 
 class RegisterWindow extends StatelessWidget {
   final borderColor = Color(0xff805306);
   // final ValueChanged navigateTo;
 
   // RegisterWindow({Key key, this.navigateTo});
-  
   @override
   Widget build(BuildContext context) {
+    final store = StoreProvider.of<AppState>(context);
     return Scaffold(
       // backgroundColor:Color(0x00050505),
       body: WindowBorder(
