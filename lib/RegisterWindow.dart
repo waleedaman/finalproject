@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'LocalDatabase.dart';
 import 'app_state.dart';
 
 class RegisterWindow extends StatelessWidget {
@@ -476,20 +477,10 @@ class _BodyState extends State<Body> {
                   height: 50,
                   child: Center(child: Text("Create Account")),
                 ),
-                onPressed: () {
-                  // final snackBar = SnackBar(
-                  //   content: Text('Yay! A SnackBar!'),
-                  //   action: SnackBarAction(
-                  //     label: 'Undo',
-                  //     onPressed: () {
-                  //       // Some code to undo the change.
-                  //     },
-                  //   ),
-                  // );
-                  //
-                  // // Find the ScaffoldMessenger in the widget tree
-                  // // and use it to show a SnackBar.
-                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                onPressed: () async {
+                  User user = User(firstName:firstNameController.text,lastName:lastNameController.text,email:emailController.text,password:passwordController.text,organizationId:organizationController.text);
+                  String message = await user.createAccount("sqlite");
+                  print(message);
                   final isValid = _form.currentState.validate();
                   if (!isValid) {
                     return;
