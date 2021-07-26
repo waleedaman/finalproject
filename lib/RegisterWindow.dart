@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'LocalDatabase.dart';
+import 'package:async/async.dart';
 import 'app_state.dart';
+import 'data/moor_database.dart';
 
 class RegisterWindow extends StatelessWidget {
   final borderColor = Color(0xff805306);
@@ -478,9 +478,11 @@ class _BodyState extends State<Body> {
                   child: Center(child: Text("Create Account")),
                 ),
                 onPressed: () async {
-                  User user = User(firstName:firstNameController.text,lastName:lastNameController.text,email:emailController.text,password:passwordController.text,organizationId:organizationController.text);
-                  String message = await user.createAccount("sqlite");
-                  print(message);
+                  final database = Provider.of<AppDatabase>(context);
+
+                  List<Organization> orgs = await database.findOrganizationByName(organizationController.text);
+
+
                   final isValid = _form.currentState.validate();
                   if (!isValid) {
                     return;
