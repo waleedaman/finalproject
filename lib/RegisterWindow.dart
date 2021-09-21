@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:async/async.dart';
 import 'app_state.dart';
+import 'constants.dart';
 import 'data/moor_database.dart';
 
 class RegisterWindow extends StatelessWidget {
@@ -16,7 +17,8 @@ class RegisterWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = StoreProvider.of<AppState>(context);
-    return Scaffold(
+    return ProgressHUD(
+      child: Scaffold(
       // backgroundColor:Color(0x00050505),
       body: WindowBorder(
           width: 1,
@@ -26,16 +28,17 @@ class RegisterWindow extends StatelessWidget {
               Window(),
             ],
           )),
+    )
     );
   }
 }
 
 class Window extends StatelessWidget {
   // final ValueChanged navigateTo;
-
   // Window({Key key, this.navigateTo});
   @override
   Widget build(BuildContext context) {
+
     return Expanded(
         child: Container(
             child: Column(children: [
@@ -121,7 +124,7 @@ class Menu extends StatelessWidget {
           Text('$title',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: isActive ? Colors.deepPurple : Colors.grey,
+                  color: isActive ? primaryColor : Colors.grey,
                   fontSize: 18)),
         ]),
         SizedBox(
@@ -131,7 +134,7 @@ class Menu extends StatelessWidget {
             ? Container(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
           decoration: BoxDecoration(
-              color: Colors.deepPurple,
+              color: primaryColor,
               borderRadius: BorderRadius.circular(30)),
         )
             : SizedBox()
@@ -142,19 +145,17 @@ class Menu extends StatelessWidget {
   Widget _loginButton(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.of(context).pushNamed("/login");
+          Navigator.of(context).pushNamed("/login",arguments:'button');
         },
         child: new Container(
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(color: Colors.grey[200], spreadRadius: 10, blurRadius: 12)
-              ]),
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(10),
+              ),
           child: Text(
             'Login',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+            style: TextStyle(fontWeight: FontWeight.bold,),
           ),
         )
     );
@@ -165,7 +166,6 @@ class Menu extends StatelessWidget {
 class Body extends StatefulWidget{
   @override
   _BodyState createState() => _BodyState();
-
 }
 
 class _BodyState extends State<Body> {
@@ -200,7 +200,7 @@ class _BodyState extends State<Body> {
             Text(
               'If you already have an account',
               style:
-              TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+              TextStyle( fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 10,
@@ -208,18 +208,18 @@ class _BodyState extends State<Body> {
             Row(children: [
               Text('You can',
                   style: TextStyle(
-                      color: Colors.black54, fontWeight: FontWeight.bold)),
+                      fontWeight: FontWeight.bold)),
               SizedBox(
                 width: 15,
               ),
               InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed("/login");
+                    Navigator.of(context).pushNamed("/login",arguments:'button');
                   },
                   child: new Container(child:Text(
                     'Sign In Here',
                     style: TextStyle(
-                        color: Colors.deepPurple, fontWeight: FontWeight.bold),
+                        color: primaryColor, fontWeight: FontWeight.bold),
                   )
                   )
               )
@@ -227,9 +227,10 @@ class _BodyState extends State<Body> {
             Image.asset('assets/images/startpage_bg.png', width: 320),
           ])),
       Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: MediaQuery.of(context).size.width / 12),
-        child: Container(width: 350, child: _formLogin(context:context,firstNameController: firstNameController,lastNameController:lastNameController,emailController:emailController, passwordController:passwordController, repeatPasswordController:repeatPasswordController, organizationController:organizationController)),
+        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.width / 12),
+        child: Container(
+            width: 350,
+            child: _formLogin(context:context,firstNameController: firstNameController,lastNameController:lastNameController,emailController:emailController, passwordController:passwordController, repeatPasswordController:repeatPasswordController, organizationController:organizationController)),
       ),
     ]);
   }
@@ -243,7 +244,9 @@ class _BodyState extends State<Body> {
     TextEditingController repeatPasswordController,
     TextEditingController organizationController,
   }) {
-    final _form = GlobalKey<FormState>(); //for storing form state.
+    final _form = GlobalKey<FormState>();
+    final progress = ProgressHUD.of(context);
+
     return Form(
         key:_form,
         child:
@@ -257,18 +260,18 @@ class _BodyState extends State<Body> {
                         controller:firstNameController,
                         decoration: InputDecoration(
                           hintText: "First Name",
-                          fillColor: Colors.blueGrey[50],
+                          fillColor: secondaryColor,
                           suffixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.grey),
                           filled: true,
                           labelStyle: TextStyle(fontSize: 12),
                           contentPadding: EdgeInsets.only(left: 30),
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blueGrey[50]),
-                              borderRadius: BorderRadius.circular(15)
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10)
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blueGrey[50]),
-                              borderRadius: BorderRadius.circular(15)
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10)
                           ),
                         )
                     ),
@@ -279,18 +282,18 @@ class _BodyState extends State<Body> {
                         controller:lastNameController,
                         decoration: InputDecoration(
                           hintText: "Last Name",
-                          fillColor: Colors.blueGrey[50],
+                          fillColor: secondaryColor,
                           suffixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.grey),
                           filled: true,
                           labelStyle: TextStyle(fontSize: 12),
                           contentPadding: EdgeInsets.only(left: 30),
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blueGrey[50]),
-                              borderRadius: BorderRadius.circular(15)
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10)
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blueGrey[50]),
-                              borderRadius: BorderRadius.circular(15)
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10)
                           ),
                         )
                     ),
@@ -311,26 +314,26 @@ class _BodyState extends State<Body> {
               },
               decoration: InputDecoration(
                 hintText: "Enter Email",
-                fillColor: Colors.blueGrey[50],
+                fillColor: secondaryColor,
                 suffixIcon: Icon(FontAwesomeIcons.envelope, color: Colors.grey),
                 filled: true,
                 labelStyle: TextStyle(fontSize: 12),
                 contentPadding: EdgeInsets.only(left: 30),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15)
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 focusedErrorBorder:OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15)
+                    borderRadius: BorderRadius.circular(10)
                 ),
               )
           ),
@@ -351,39 +354,44 @@ class _BodyState extends State<Body> {
               },
               decoration: InputDecoration(
                 hintText: "Enter Password",
-                fillColor: Colors.blueGrey[50],
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    // Based on passwordVisible state choose the icon
-                    _passwordObscured
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                  onPressed: () {
-                    // Update the state i.e. toogle the state of passwordVisible variable
-                    setState(() {
-                      _passwordObscured = !_passwordObscured;
-                    });
-                  },),
+                fillColor: secondaryColor,
+                suffixIcon: Container(
+                    decoration:BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child:IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _passwordObscured
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color:Colors.white,
+                      ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                          _passwordObscured = !_passwordObscured;
+                        });
+                      },)),
                 filled: true,
                 labelStyle: TextStyle(fontSize: 12),
                 contentPadding: EdgeInsets.only(left: 30),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15)
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 focusedErrorBorder:OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15)
+                    borderRadius: BorderRadius.circular(10)
                 ),
               )
           ),
@@ -404,39 +412,44 @@ class _BodyState extends State<Body> {
               },
               decoration: InputDecoration(
                 hintText: "Repeat Password",
-                fillColor: Colors.blueGrey[50],
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    // Based on passwordVisible state choose the icon
-                    _passwordObscured
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                  onPressed: () {
-                    // Update the state i.e. toogle the state of passwordVisible variable
-                    setState(() {
-                      _passwordObscured = !_passwordObscured;
-                    });
-                  },),
+                fillColor: secondaryColor,
+                suffixIcon: Container(
+                    decoration:BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child:IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _passwordObscured
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color:Colors.white,
+                      ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                          _passwordObscured = !_passwordObscured;
+                        });
+                      },)),
                 filled: true,
                 labelStyle: TextStyle(fontSize: 12),
                 contentPadding: EdgeInsets.only(left: 30),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15)
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 focusedErrorBorder:OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15)
+                    borderRadius: BorderRadius.circular(10)
                 ),
               )
           ),
@@ -447,30 +460,23 @@ class _BodyState extends State<Body> {
               controller: organizationController,
               decoration: InputDecoration(
                 hintText: "Organization",
-                fillColor: Colors.blueGrey[50],
+                fillColor: secondaryColor,
                 suffixIcon: Icon(FontAwesomeIcons.building, color: Colors.grey),
                 filled: true,
                 labelStyle: TextStyle(fontSize: 12),
                 contentPadding: EdgeInsets.only(left: 30),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)),
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey[50]),
-                    borderRadius: BorderRadius.circular(15)),
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10)),
               )),
           SizedBox(height: 40),
           Container(
             decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.deepPurple[100],
-                    spreadRadius: 10,
-                    blurRadius: 20,
-                  )
-                ]),
+                ),
             child: ElevatedButton(
                 child: Container(
                   width: double.infinity,
@@ -478,22 +484,53 @@ class _BodyState extends State<Body> {
                   child: Center(child: Text("Create Account")),
                 ),
                 onPressed: () async {
-                  final database = Provider.of<AppDatabase>(context);
-
-                  List<Organization> orgs = await database.findOrganizationByName(organizationController.text);
-
-
+                  progress.show();
                   final isValid = _form.currentState.validate();
                   if (!isValid) {
+                    progress.dismiss();
                     return;
+                  }
+                  final database = Provider.of<AppDatabase>(context, listen: false);
+                  List<Organization> orgs = await database.findOrganizationByName(organizationController.text);
+
+                  if(orgs.isEmpty){
+                    final organization = Organization(
+                        organizationName:organizationController.text.toString()
+                    );
+                    var user;
+                    database.insertOrganization(organization).then((value) => {
+                      user = User(
+                          firstName:firstNameController.text.toString(),
+                          lastName:lastNameController.text.toString(),
+                          email:emailController.text.toString(),
+                          password:passwordController.text.toString(),
+                          organizationId: value,
+                        ),
+                      database.insertUser(user).then((value) =>{
+                        Navigator.of(context).pushNamed("/login",arguments:'new'),
+                        progress.dismiss()
+                      }).onError((error, stackTrace) => {progress.dismiss()}),
+                    }).onError((error, stackTrace) => {progress.dismiss});
+                  }else{
+                    var user = User(
+                      firstName:firstNameController.text.toString(),
+                      lastName:lastNameController.text.toString(),
+                      email:emailController.text.toString(),
+                      password:passwordController.text.toString(),
+                      organizationId: orgs.first.id,
+                    );
+                    database.insertUser(user).then((value) => {
+                      Navigator.of(context).pushNamed("/login",arguments:'new'),
+                      progress.dismiss()
+                    }).onError((error, stackTrace) => {progress.dismiss()});
                   }
 
                 },
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
+                    primary: primaryColor,
                     onPrimary: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)))),
+                        borderRadius: BorderRadius.circular(10)))),
           ),
         ]));
   }

@@ -4,8 +4,9 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-import 'package:finalproject/actions.dart';
-import 'package:finalproject/app_state.dart';
+
+import 'actions.dart';
+import 'app_state.dart';
 
 class SplashScreen extends StatelessWidget {
   String _navPath = "";
@@ -21,7 +22,11 @@ class SplashScreen extends StatelessWidget {
             UpdateModeAction(val.mode));
         print("State: "+StoreProvider.of<AppState>(context).state.mode+" Pref: "+val.mode);
       }
-      Navigator.of(context).pushNamed(_navPath);
+      if(_navPath == "/login"){
+        Navigator.of(context).pushNamed(_navPath,arguments:'splash');
+      }else{
+        Navigator.of(context).pushNamed(_navPath);
+      }
     });
     return Scaffold(
       // backgroundColor:Color(0x00050505),
@@ -70,7 +75,11 @@ class SplashScreen extends StatelessWidget {
             if(_navPath != ""){
               prefs.setInt('initialRun', 1);
               prefs.setString('mode', "online");
-              Navigator.of(context).pushNamed(_navPath);
+              if(_navPath == "/login") {
+                Navigator.of(context).pushNamed(_navPath,arguments:'splash');
+              }else{
+                Navigator.of(context).pushNamed(_navPath);
+              }
             }else{
               final initialRun = prefs.getInt('initialRun') ?? 0;
               prefs.setInt('initialRun', 1);
@@ -78,7 +87,7 @@ class SplashScreen extends StatelessWidget {
               if (initialRun == 0) {
                 Navigator.of(context).pushNamed("/register");
               }else{
-                Navigator.of(context).pushNamed("/login");
+                Navigator.of(context).pushNamed("/login",arguments:'splash');
               }
             }
           },
@@ -99,7 +108,11 @@ class SplashScreen extends StatelessWidget {
             if(_navPath != ""){
               prefs.setInt('initialRun', 1);
               prefs.setString('mode', "offline");
-              Navigator.of(context).pushNamed(_navPath);
+              if(_navPath == "/login"){
+                Navigator.of(context).pushNamed(_navPath,arguments:'splash');
+              }else{
+                Navigator.of(context).pushNamed(_navPath);
+              }
             }else{
               final initialRun = prefs.getInt('initialRun') ?? 0;
               prefs.setInt('initialRun', 1);
@@ -107,7 +120,7 @@ class SplashScreen extends StatelessWidget {
               if (initialRun == 0) {
                 Navigator.of(context).pushNamed("/register");
               }else{
-                Navigator.of(context).pushNamed("/login");
+                Navigator.of(context).pushNamed("/login",arguments:'splash');
               }
             }
           },
